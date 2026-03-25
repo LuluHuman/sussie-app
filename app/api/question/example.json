@@ -1,0 +1,22 @@
+{
+    "objs": [
+        {
+            "name": "NVMe SSD",
+            "coords": {
+                "x1": 0.088,
+                "y1": 0.47,
+                "x2": 0.887,
+                "y2": 0.648
+            }
+        }
+    ],
+    "materials": [
+        "Gold",
+        "Silicon",
+        "Copper",
+        "Tantalum",
+        "Palladium",
+        "Silver"
+    ],
+    "res": "This NVMe SSD is classified as electronic waste (e-waste) and contains precious materials like gold, silver, and copper that can be recovered through specialized recycling. For users in Singapore, the most effective way to dispose of this is via the ALBA e-waste collection bins located at many community centers and major electronics retailers like Gain City or Harvey Norman. In Bali, you should seek out dedicated e-waste collection points provided by organizations like 'E-waste Indonesia' or check for local government collection events, as regular trash services are not equipped to handle electronics safely. Before disposal, it is crucial to perform a secure data wipe or physically destroy the memory chips to protect your personal information. Proper recycling prevents hazardous materials like lead and flame retardants from contaminating local soil and groundwater."
+}
