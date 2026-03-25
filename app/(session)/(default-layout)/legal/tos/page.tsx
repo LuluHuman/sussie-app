@@ -1,3 +1,3 @@
-export default function PP() {
+export default function Tos() {
     return <>Terms of Service</>
 }
