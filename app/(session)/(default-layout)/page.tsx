@@ -77,9 +77,9 @@ export default function Gsic() {
                             if (!qn) return setError("Ask a question")
                             setResponse({ state: ResponseState.ASKING })
                             const response = await axios.post("/api/question", JSON.stringify({ qn, image: imgSrc }), { validateStatus: () => true })
-                            if (response.data.text)
-                                if (typeof response.data.text == "string") setResponse({ state: ResponseState.RESPONDED, text: response.data.text })
-                                else setResponse({ state: ResponseState.RESPONDED, text: response.data.text.res })
+                            if (response.data.res)
+                                if (typeof response.data.res == "string") setResponse({ state: ResponseState.RESPONDED, text: response.data.res })
+                                else setResponse({ state: ResponseState.RESPONDED, text: response.data.res })
                             else if (response.data.error) setResponse({ state: ResponseState.RESPONDED_ERROR, text: "An error has occured: <br/>" + response.data.error })
                             break
                         }
