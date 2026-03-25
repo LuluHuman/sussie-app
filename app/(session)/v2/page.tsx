@@ -33,12 +33,12 @@ export default function Gsic() {
 
     const [response, setResponse] = useState<{ state: ResponseState, response?: schemaResponse | string }>({ state: ResponseState.READY })
     const [error, setError] = useState<string>()
+    const canvasRef = React.useRef<HTMLCanvasElement>(null)
+    const [auth, setAuth] = useState<boolean>(false)
     useEffect(() => console.log(response), [response])
 
 
     const session = useSession()
-
-    const [auth, setAuth] = useState<boolean>(false)
     useEffect(() => {
         switch (session.status) {
             case "unauthenticated": redirect("/login");
@@ -47,6 +47,55 @@ export default function Gsic() {
         }
     }, [session])
 
+    useEffect(() => {
+        if (!imgSrc || !canvasRef.current) return
+        const canvas = canvasRef.current
+        const ctx = canvas.getContext("2d")
+        if (!ctx) return
+
+        const img = new Image()
+        img.onload = () => {
+            canvas.width = img.width
+            canvas.height = img.height
+            ctx.drawImage(img, 0, 0)
+        }
+        img.src = imgSrc
+    }, [imgSrc])
+    useEffect(() => {
+        if (!response.response || typeof response.response == "string" || !response.response.objs || !canvasRef.current) return
+        const canvas = canvasRef.current
+        const ctx = canvas.getContext("2d")
+        if (!ctx) return
+        response.response.objs
+            .map((obj) => {
+                const [x1, y1, x2, y2] = [
+                    obj.coords.x1 * canvas.width,
+                    obj.coords.y1 * canvas.height,
+                    (obj.coords.x2 * canvas.width) - (obj.coords.x1 * canvas.width),
+                    (obj.coords.y2 * canvas.height) - (obj.coords.y1 * canvas.height)
+                ].map(Math.floor)
+
+
+                // Draw bounding box
+                ctx.beginPath();
+                ctx.lineWidth = 3  // Thinner line
+                ctx.strokeStyle = "red";
+                ctx.rect(x1, y1, x2, y2);
+                ctx.stroke();
+                ctx.closePath()
+
+                // Draw text with background for readability
+                ctx.font = "70px Arial";  // Smaller font
+                ctx.fillStyle = "red";
+                ctx.fillRect(x1, y1 - 70, ctx.measureText(obj.name).width + 8, 70);
+
+                ctx.fillStyle = "white";
+                ctx.fillText(obj.name, x1 + 4, y1 - 8);
+            })
+
+
+    }, [response])
+
     const buttonStates: { [key: number]: React.JSX.Element | string } = {}
     buttonStates[ResponseState.READY] = "Ask"
     buttonStates[ResponseState.ASKING] = <Loader />
@@ -54,28 +103,40 @@ export default function Gsic() {
     buttonStates[ResponseState.RESPONDED_ERROR] = "Try Again"
 
     const showOutput = [ResponseState.RESPONDED, ResponseState.RESPONDED_ERROR].includes(response.state)
-
+    const getCompressedImage = (quality: number = 0.7) => {
+        if (!canvasRef.current) return null
+        return canvasRef.current.toDataURL("image/jpeg", quality)
+    }
     return (
         <div className="flex flex-col w-svw h-svh items-center gap-2" >
             <header className="absolute"><img src="/logo_full.png" alt="" className='h-12 p-2' /></header>
 
             {/* Chosen One/Image */}
-            {imgSrc && <img width={256} className="object-contain w-full h-full" src={imgSrc} alt="" />}
+            {/* {imgSrc && <img width={256} className="object-contain w-full h-full" src={imgSrc} alt="" />} */}
+            {imgSrc && <canvas ref={canvasRef} className="object-contain w-full h-full" />}
 
             {/* Upload Button */}
-            <div className="bg-white size-16 rounded-full flex justify-center items-center absolute bottom-6 aspect-square">
-                <input id="myImage" type="file" accept="image/*, image/jpeg"
-                    disabled={!auth}
-                    className="absolute size-16 text-center opacity-0" onChange={(e) => {
-                        if (!e.target.files || !e.target.files[0]) return
-                        var reader = new FileReader();
-                        reader.onload = (e) => {
-                            setImgSrc((e.target?.result || "") as string);
-                            setDrawerVisable(true)
-                        }
-                        reader.readAsDataURL(e.target.files[0]);
-                    }}
-                />
+            <div className="bg-white size-16 rounded-full flex justify-center items-center absolute bottom-6 aspect-square"
+                onClick={() => {
+                    if (response.state != ResponseState.RESPONDED && response.state != ResponseState.RESPONDED_ERROR) return
+                    setDrawerVisable(true)
+
+                }}>
+                {response.state == ResponseState.RESPONDED || response.state == ResponseState.RESPONDED_ERROR
+                    ? <button></button>
+                    : <input id="myImage" type="file" accept="image/*, image/jpeg"
+                        disabled={!auth}
+                        className="absolute size-16 text-center opacity-0" onChange={(e) => {
+                            if (!e.target.files || !e.target.files[0]) return
+                            var reader = new FileReader();
+                            reader.onload = (e) => {
+                                setImgSrc((e.target?.result || "") as string);
+                                setDrawerVisable(true)
+                            }
+                            reader.readAsDataURL(e.target.files[0]);
+                        }}
+                    />
+                }
                 <AddAPhoto />
             </div>
 
@@ -99,7 +160,9 @@ export default function Gsic() {
                                     if (!imgSrc) return setError("Upload an image")
                                     if (!qn) return setError("Ask a question")
                                     setResponse({ state: ResponseState.ASKING })
-                                    const response = await axios.post("/api/question", JSON.stringify({ qn, image: imgSrc }), { validateStatus: () => true })
+
+                                    const imageUrl = getCompressedImage(0.5)
+                                    const response = await axios.post("/api/question", JSON.stringify({ qn, image: imageUrl }), { validateStatus: () => true })
                                     if (response.data.res) setResponse({ state: ResponseState.RESPONDED, response: response.data as schemaResponse })
                                     else if (response.data.error) setResponse({ state: ResponseState.RESPONDED_ERROR, response: "An error has occured: <br/>" + response.data.error })
                                     break
@@ -128,6 +191,7 @@ export default function Gsic() {
                         { icon: "🗑️", text: "How do i properly dispose this", },
                         { icon: "♻️", text: "How do i recycle this this", },
                         { icon: "🪛", text: "How can i fix this", },
+                        { icon: "❔", text: "What can i do with this", },
                     ]}
                     setQn={setQn} />
                 {

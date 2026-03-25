@@ -1,22 +1,65 @@
 {
     "objs": [
         {
-            "name": "NVMe SSD",
+            "name": "computer monitor",
             "coords": {
-                "x1": 0.088,
-                "y1": 0.47,
-                "x2": 0.887,
-                "y2": 0.648
+                "x1": 0.012,
+                "y1": 0.256,
+                "x2": 0.831,
+                "y2": 0.859
+            }
+        },
+        {
+            "name": "computer monitor",
+            "coords": {
+                "x1": 0.000,
+                "y1": 0.270,
+                "x2": 0.575,
+                "y2": 0.567
+            }
+        },
+        {
+            "name": "computer monitor",
+            "coords": {
+                "x1": 0.821,
+                "y1": 0.306,
+                "x2": 0.997,
+                "y2": 0.584
+            }
+        },
+        {
+            "name": "computer mouse",
+            "coords": {
+                "x1": 0.762,
+                "y1": 0.606,
+                "x2": 0.856,
+                "y2": 0.678
+            }
+        },
+        {
+            "name": "electronic peripheral",
+            "coords": {
+                "x1": 0.908,
+                "y1": 0.659,
+                "x2": 1.000,
+                "y2": 0.765
+            }
+        },
+        {
+            "name": "soundbar",
+            "coords": {
+                "x1": 0.000,
+                "y1": 0.093,
+                "x2": 0.874,
+                "y2": 0.199
             }
         }
     ],
     "materials": [
         "Gold",
-        "Silicon",
+        "Silver",
         "Copper",
-        "Tantalum",
-        "Palladium",
-        "Silver"
+        "Palladium"
     ],
-    "res": "This NVMe SSD is classified as electronic waste (e-waste) and contains precious materials like gold, silver, and copper that can be recovered through specialized recycling. For users in Singapore, the most effective way to dispose of this is via the ALBA e-waste collection bins located at many community centers and major electronics retailers like Gain City or Harvey Norman. In Bali, you should seek out dedicated e-waste collection points provided by organizations like 'E-waste Indonesia' or check for local government collection events, as regular trash services are not equipped to handle electronics safely. Before disposal, it is crucial to perform a secure data wipe or physically destroy the memory chips to protect your personal information. Proper recycling prevents hazardous materials like lead and flame retardants from contaminating local soil and groundwater."
+    "res": "The electronic devices in this image, including the monitors, mouse, and soundbar, are considered e-waste and should never be disposed of in your regular household trash. These items contain hazardous substances like lead and mercury that can contaminate the environment if not handled correctly. To properly dispose of them, look for a certified e-waste recycling center in your local area. Many electronic retailers also offer take-back programs or designated recycling bins for smaller peripherals. Proper recycling allows for the recovery of valuable precious metals like gold and copper, supporting a circular economy."
 }

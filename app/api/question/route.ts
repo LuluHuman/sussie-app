@@ -1,14 +1,9 @@
-import { readFileSync } from "fs";
-import { setTimeout } from "timers/promises";
-
 import { GenerateContentResponse, GoogleGenAI, MediaResolution } from "@google/genai";
 
-import { cookies } from 'next/headers'
-const { createHash } = require('crypto');
 import { getServerSession } from "next-auth/next"
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { authOptions } from "../auth/[...nextauth]/route";
-import { IncomingMessage, ServerResponse } from "http";
+import { readFileSync } from "fs";
 
 export async function POST(request: NextRequest) {
     const sesion = await getServerSession(authOptions)
@@ -99,7 +94,7 @@ export async function POST(request: NextRequest) {
     }
 
     return response ? new Response(response.text) : new Response(JSON.stringify({ error: "No response was recieved" }), { status: 500 })
-    // const f = readFileSync("/home/lulu/Documents/sussie-app/app/api/question/example.json", "utf-8")
+    // const f = readFileSync("/home/lulu/Documents/sussie-app/app/api/question/example2.json", "utf-8")
     // await setTimeout(3000)
     // return new Response(f)
 }
