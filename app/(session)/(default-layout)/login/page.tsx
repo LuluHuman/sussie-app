@@ -19,7 +19,7 @@ export default function Login() {
                     : <>
                         <h1>You're not logged it</h1>
                         <p>Welcome the the AMAZING digital SUSSIE</p>
-                        <button onClick={() => signIn()} className="bg-primary text-background p-2 rounded-4xl">Sign out</button>
+                        <button onClick={() => signIn()} className="bg-primary text-background p-2 rounded-4xl">Sign in</button>
                     </>
             }
         </div>
