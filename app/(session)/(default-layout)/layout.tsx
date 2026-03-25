@@ -19,6 +19,10 @@ export default function MainLayout({ children }: Readonly<{ children: React.Reac
             </div >
             <footer className='text-center pb-2'>
                 Made with <span className='line-through'>all the</span> 💜 <span className='line-through'>i'm legally allowed to give</span> by humans
+                <p className="flex gap-2 items-center justify-center">
+                    <a href="/legal/pp">Privacy Policy</a>
+                    <a href="/legal/tos">Terms of Service</a>
+                </p>
             </footer>
         </>
     )
