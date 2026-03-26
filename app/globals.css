@@ -9,10 +9,6 @@ body {
 	@apply bg-background text-primary;
 }
 
-h1 {
-	@apply text-2xl my-2;
-}
-
 h2 {
 	@apply text-3xl my-2;
 }

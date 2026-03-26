@@ -41,7 +41,7 @@ export default function Gsic() {
     const session = useSession()
     useEffect(() => {
         switch (session.status) {
-            case "unauthenticated": redirect("/login");
+            case "unauthenticated": redirect("/");
             case "authenticated": { setAuth(true); break };
             default: break;
         }
@@ -96,11 +96,12 @@ export default function Gsic() {
 
     }, [response])
 
-    const buttonStates: { [key: number]: React.JSX.Element | string } = {}
-    buttonStates[ResponseState.READY] = "Ask"
-    buttonStates[ResponseState.ASKING] = <Loader />
-    buttonStates[ResponseState.RESPONDED] = "Retry now"
-    buttonStates[ResponseState.RESPONDED_ERROR] = "Try Again"
+    const buttonStates: { [key: number]: React.JSX.Element | string } = {
+        0: "Ask", // ResponseState.READY
+        1: <Loader />, // ResponseState.ASKING
+        2: "Retry now", // ResponseState.RESPONDED
+        12: "Try Again" // ResponseState.RESPONDED_ERROR
+    }
 
     const showOutput = [ResponseState.RESPONDED, ResponseState.RESPONDED_ERROR].includes(response.state)
     const getCompressedImage = (quality: number = 0.7) => {
@@ -109,11 +110,16 @@ export default function Gsic() {
     }
     return (
         <div className="flex flex-col w-svw h-svh items-center gap-2" >
-            <header className="absolute"><img src="/logo_full.png" alt="" className='h-12 p-2' /></header>
+            <header className="absolute"><a href="/"><img src="/logo_full.png" alt="" className='h-12 p-2' /></a></header>
 
             {/* Chosen One/Image */}
-            {/* {imgSrc && <img width={256} className="object-contain w-full h-full" src={imgSrc} alt="" />} */}
-            {imgSrc && <canvas ref={canvasRef} className="object-contain w-full h-full" />}
+            {
+                imgSrc ?
+                    <canvas ref={canvasRef} className="object-contain w-full h-full" />
+                    : <div className="w-full h-full flex items-center justify-center flex-col *:fill-primary">
+                        <p className="flex justify-center gap-2">Upload an image using the <span className="inline-block"><AddAPhoto size={28} /></span> button and start questioning</p>
+                    </div>
+            }
 
             {/* Upload Button */}
             <div className="bg-white size-16 rounded-full flex justify-center items-center absolute bottom-6 aspect-square"
@@ -141,7 +147,7 @@ export default function Gsic() {
             </div>
 
             {/* Drawer */}
-            <div className={`fixed h-3/4 w-full max-w-160 rounded-t-3xl bg-background-2 p-4 opacity-0 transition-all duration-200 overflow-y-scroll ${!showDrawer ? "-bottom-3/4 opacity-0" : "bottom-0 opacity-100"}`} >
+            <div className={`fixed h-3/4 w-full max-w-160 rounded-t-3xl bg-background-2 p-4 opacity-0 transition-all duration-200 overflow-y-scroll ${!showDrawer ? "-bottom-3/4 opacity-0" : "bottom-0 opacity-100"} shadow-2xl`} >
                 <button className="w-full text-left text-2xl" onClick={() => setDrawerVisable(false)}>X</button>
 
                 <div className="flex gap-2 w-full max-w-160">
@@ -240,6 +246,6 @@ function Loader() {
     return <svg fill="white" className="w-full h-full" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10.72,19.9a8,8,0,0,1-6.5-9.79A7.77,7.77,0,0,1,10.4,4.16a8,8,0,0,1,9.49,6.52A1.54,1.54,0,0,0,21.38,12h.13a1.37,1.37,0,0,0,1.38-1.54,11,11,0,1,0-12.7,12.39A1.54,1.54,0,0,0,12,21.34h0A1.47,1.47,0,0,0,10.72,19.9Z"><animateTransform attributeName="transform" type="rotate" dur="3s" values="0 12 12;360 12 12" repeatCount="indefinite" /></path></svg>
 }
 
-function AddAPhoto() {
-    return <svg xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 -960 960 960" width="32px" fill="#000000"><path d="M440-438ZM106.67-120q-27 0-46.84-19.83Q40-159.67 40-186.67v-502q0-26.33 19.83-46.5 19.84-20.16 46.84-20.16h140L320-840h262.67v66.67H350.33l-73 84.66H106.67v502h666.66v-396H840v396q0 27-20.17 46.84Q799.67-120 773.33-120H106.67Zm666.66-569.33v-84h-84V-840h84v-84.67H840V-840h84.67v66.67H840v84h-66.67ZM439.67-264.67q73.33 0 123.5-50.16 50.16-50.17 50.16-123.5 0-73.34-50.16-123.17-50.17-49.83-123.5-49.83-73.34 0-123.17 49.83t-49.83 123.17q0 73.33 49.83 123.5 49.83 50.16 123.17 50.16Zm0-66.66q-45.67 0-76-30.67-30.34-30.67-30.34-76.33 0-45.67 30.34-76 30.33-30.34 76-30.34 45.66 0 76.33 30.34 30.67 30.33 30.67 76 0 45.66-30.67 76.33t-76.33 30.67Z" /></svg>
+function AddAPhoto({ size }: { size?: number }) {
+    return <svg xmlns="http://www.w3.org/2000/svg" height={(size || 32) + "px"} viewBox="0 -960 960 960" width={(size || 32) + "px"} ><path d="M440-438ZM106.67-120q-27 0-46.84-19.83Q40-159.67 40-186.67v-502q0-26.33 19.83-46.5 19.84-20.16 46.84-20.16h140L320-840h262.67v66.67H350.33l-73 84.66H106.67v502h666.66v-396H840v396q0 27-20.17 46.84Q799.67-120 773.33-120H106.67Zm666.66-569.33v-84h-84V-840h84v-84.67H840V-840h84.67v66.67H840v84h-66.67ZM439.67-264.67q73.33 0 123.5-50.16 50.16-50.17 50.16-123.5 0-73.34-50.16-123.17-50.17-49.83-123.5-49.83-73.34 0-123.17 49.83t-49.83 123.17q0 73.33 49.83 123.5 49.83 50.16 123.17 50.16Zm0-66.66q-45.67 0-76-30.67-30.34-30.67-30.34-76.33 0-45.67 30.34-76 30.33-30.34 76-30.34 45.66 0 76.33 30.34 30.67 30.33 30.67 76 0 45.66-30.67 76.33t-76.33 30.67Z" /></svg>
 }
